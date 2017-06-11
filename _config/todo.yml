@@ -1,0 +1,29 @@
+---
+Name: todo
+---
+SilverStripe\GraphQL\Controller:
+  schema:
+    scaffolding:
+      types:
+        Flamerohr\Todo\Models\Todo:
+          fields: '*'
+          excludeFields:
+            - 'Secret'
+          operations:
+            create: true
+            read: true
+            update: true
+            delete: true
+
+---
+Name: todoroutes
+After:
+  - '#todo'
+  - '#adminroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'todo//': 'Flamerohr\Todo\Controllers\TodoApp'
+    graphql:
+      Permissions:
+        null

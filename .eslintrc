@@ -1,0 +1,18 @@
+{
+  "extends": "airbnb",
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ],
+        "moduleDirectory": [
+          "client/src/js",
+          "client/src/sass",
+          "node_modules"
+        ]
+      }
+    }
+  }
+}

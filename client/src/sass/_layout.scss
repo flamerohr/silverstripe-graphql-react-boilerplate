@@ -1,0 +1,35 @@
+.flex {
+	display: flex;
+
+	&--wrapped {
+		flex-wrap: wrap;
+	}
+
+	&--from-top {
+		flex-direction: column;
+	}
+
+	&--from-bottom {
+		flex-direction: column-reverse;
+	}
+
+	&--from-left {
+		flex-direction: row;
+	}
+
+	&--from-right {
+		flex-direction: row-reverse;
+	}
+}
+
+.flex__grow {
+	flex: 2;
+
+	&--sm {
+		flex: 1;
+	}
+
+	&--lg {
+		flex: 4;
+	}
+}

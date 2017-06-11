@@ -1,0 +1,14 @@
+body {
+	font-size: 1.1rem;
+}
+
+.body {
+	min-height: 350px;
+}
+
+.loading {
+	background-size: cover;
+	background: url("../images/jar-loading.gif") center no-repeat;
+}
+
+@import 'layout.scss';

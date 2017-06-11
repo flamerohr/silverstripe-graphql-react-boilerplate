@@ -1,0 +1,6 @@
+# ignore composer vendor folder
+/vendor/
+**/dist/
+/node_modules/
+
+yarn.lock

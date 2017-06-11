@@ -1,0 +1,22 @@
+{
+    "name": "flamerohr/silverstripe-graphql-react-boilerplate",
+    "description": "Help get started with GraphQL and React in SilverStripe by providing helpers and a standard build to get you hitting the ground running",
+    "type": "silverstripe-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christopher Joe",
+            "email": "flamer.ohr@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "silverstripe/framework": "4.0.x-dev",
+        "silverstripe/graphql": "0.2.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flamerohr\\Todo\\": "src"
+        }
+    }
+}
