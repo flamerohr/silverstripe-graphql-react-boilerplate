@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { graphql, compose } from 'react-apollo';
+import { compose } from 'react-apollo';
+import createTodo from 'states/todos/createTodo';
 
 class TodoCreate extends Component {
   constructor(props) {
@@ -20,5 +21,5 @@ export default compose(
   // connect(mapStateToProps, mapDispatchToProps),
 
   // use the graphql HOC to populate data, add a config to set variables for the query
-  graphql(createTodo, config),
+  // createTodo,
 )(TodoCreate);

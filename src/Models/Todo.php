@@ -11,6 +11,7 @@ class Todo extends DataObject
         'IsDone' => 'Boolean',
         'Description' => 'Text',
         'Order' => 'Int',
+        'Secret' => 'Varchar(255)',
     ];
     
     public function canView($member = null)

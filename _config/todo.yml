@@ -11,7 +11,10 @@ SilverStripe\GraphQL\Controller:
             - 'Secret'
           operations:
             create: true
-            read: true
+            read:
+              resolver: Flamerohr\Todo\Controllers\ReadTodoResolver
+              args:
+                ID: ID
             update: true
             delete: true
 

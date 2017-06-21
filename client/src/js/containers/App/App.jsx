@@ -13,7 +13,7 @@ function App() {
       <div className="body flex flex--from-top">
         <Route exact path="/" component={TodoList} />
         <Route path="/create" component={TodoCreate} />
-        <Route path="/edit/:todoId" component={TodoUpdate} />
+        {/* <Route path="/edit/:todoId" component={TodoUpdate} /> */}
       </div>
       <footer>
         My actions here

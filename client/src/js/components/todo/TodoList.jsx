@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql, compose } from 'react-apollo';
-import readQueryCreator from 'lib/graphql/readQueryCreator';
-import { fields, pluralName as name, propTypes as todoType } from 'schemas/Todo';
-import TodoListItem from './TodoListItem';
+import { compose } from 'react-apollo';
+import { propTypes as todoType } from 'schemas/Todo';
+import readTodos from 'states/todos/readTodos';
+import TodoListItem from 'components/todo/TodoListItem';
 
-const TodoList = props => (
+const TodoList = ({ reload, error, loading, todos, totalCount }) => (
   <div>
-    {props.reload && <button onClick={() => props.reload()}>Reload list</button>}
-    {props.error && <span className="error">{props.error.message}</span>}
-    {props.loading
+    {reload && <button onClick={() => reload()}>Reload list</button>}
+    {error && <span className="error">{error.message}</span>}
+    {loading
       ? <div>Loading...</div>
-      : <div>Total: {props.totalCount}</div>
+      : <div>Total: {totalCount}</div>
     }
-    {props.todos.length > 0 &&
+    {todos.length > 0 &&
       <ul>
-        {props.todos.map(todo => (
+        {todos.map(todo => (
           <li key={todo.ID}><TodoListItem {...todo} /></li>
         ))}
       </ul>
@@ -42,23 +42,6 @@ TodoList.defaultProps = {
   error: null,
 };
 
-const config = {
-  // juggle the graphql data obtained to a more meaningful structure, similar to mapStateToProps
-  props: ({ data }) => {
-    const list = data[`read${name}`];
-
-    return {
-      reload: data.refetch,
-      todos: list && list.edges.map(edge => edge.node),
-      totalCount: list && list.pageInfo.totalCount,
-      loading: data.loading,
-      error: data.error,
-    };
-  },
-};
-
-const readTodos = readQueryCreator(name, fields);
-
 export { TodoList as Component };
 
 export default compose(
@@ -66,5 +49,5 @@ export default compose(
   // connect(mapStateToProps, mapDispatchToProps),
 
   // use the graphql HOC to populate data, add a config to set variables for the query
-  graphql(readTodos, config),
+  readTodos,
 )(TodoList);
