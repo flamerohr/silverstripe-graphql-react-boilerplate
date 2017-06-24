@@ -12,9 +12,11 @@ SilverStripe\GraphQL\Controller:
           operations:
             create: true
             read:
-              resolver: Flamerohr\Todo\Controllers\ReadTodoResolver
+              resolver: Flamerohr\Todo\Controllers\ReadTodosResolver
               args:
                 ID: ID
+                Description: String
+                IsDone: Boolean
             update: true
             delete: true
 

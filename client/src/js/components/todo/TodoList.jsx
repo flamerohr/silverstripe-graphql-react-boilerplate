@@ -5,7 +5,7 @@ import { propTypes as todoType } from 'schemas/Todo';
 import readTodos from 'states/todos/readTodos';
 import TodoListItem from 'components/todo/TodoListItem';
 
-const TodoList = ({ reload, error, loading, todos, totalCount }) => (
+const TodoList = ({ reload, error, loading, Todos, totalCount }) => (
   <div>
     {reload && <button onClick={() => reload()}>Reload list</button>}
     {error && <span className="error">{error.message}</span>}
@@ -13,9 +13,9 @@ const TodoList = ({ reload, error, loading, todos, totalCount }) => (
       ? <div>Loading...</div>
       : <div>Total: {totalCount}</div>
     }
-    {todos.length > 0 &&
+    {Todos.length > 0 &&
       <ul>
-        {todos.map(todo => (
+        {Todos.map(todo => (
           <li key={todo.ID}><TodoListItem {...todo} /></li>
         ))}
       </ul>
@@ -25,7 +25,7 @@ const TodoList = ({ reload, error, loading, todos, totalCount }) => (
 
 TodoList.propTypes = {
   reload: PropTypes.func,
-  todos: PropTypes.arrayOf(PropTypes.shape(todoType)),
+  Todos: PropTypes.arrayOf(PropTypes.shape(todoType)),
   totalCount: PropTypes.number,
   loading: PropTypes.bool,
   error: PropTypes.shape({
@@ -36,7 +36,7 @@ TodoList.propTypes = {
 
 TodoList.defaultProps = {
   reload: null,
-  todos: [],
+  Todos: [],
   totalCount: 0,
   loading: false,
   error: null,

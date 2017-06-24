@@ -15,6 +15,7 @@ const propTypes = {
   ID: PropTypes.string, // php's graphql defines an ID as string
   IsDone: PropTypes.bool,
   Description: PropTypes.string,
+  Order: PropTypes.number,
 };
 
 const defaultProps = {
