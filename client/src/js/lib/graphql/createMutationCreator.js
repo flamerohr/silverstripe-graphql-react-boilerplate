@@ -1,14 +1,60 @@
 import gql from 'graphql-tag';
-import mapFields from 'lib/graphql/mapFields';
+import { mapFields, buildDefs, buildArgs } from 'lib/graphql/helpers';
 
-// for more information on fields and types, http://graphql.org/learn/schema/#scalar-types
-const createMutationCreator = (singularName, fields, fragments) => (
-  gql`mutation Create${singularName}($Input:${singularName}CreateInputType!) {
-    create${singularName}(Input: $Input) {
-      ${mapFields(fields)}
+/**
+ * Creates the mutation graphql tag for the apollo-client to use.
+ *
+ * @param {string} singularName
+ * @param {string[]} fields
+ * @param {string} fragments
+ * @param {object} params - format: { field: InputType }
+ */
+const createMutationCreator = (
+  singularName,
+  fields = [],
+  { fragments = '', params = {} } = {},
+) => (
+  gql`mutation Create${singularName}(
+    $Input:${singularName}CreateInputType!
+    ${buildDefs(params)}
+  ) {
+    create${singularName}(
+      Input: $Input
+      ${buildArgs(params)}
+    ) {
+      ${mapFields(fields) || 'ID'}
     }
   }
-  ${fragments || ''}`
+  ${fragments}`
 );
+
+/**
+ * Provides an action that could be called by providing the input data, so the component
+ * is agnostic to the structure of graphql.
+ *
+ * @param {function} afterMutation
+ * @param {string[]} allowedFields
+ */
+const createMutateHandler = (afterMutation, allowedFields) => ({ mutate, ownProps }) => ({
+  mutate: submitData => (
+    mutate({
+      variables: {
+        Input: (allowedFields)
+          ? allowedFields.reduce((prev, field) => ({
+            ...prev,
+            [field]: submitData[field],
+          }), {})
+          : submitData,
+      },
+    }).then((data) => {
+      if (typeof afterMutation === 'function') {
+        afterMutation(data, ownProps);
+      }
+      return data;
+    })
+  ),
+});
+
+export { createMutateHandler };
 
 export default createMutationCreator;

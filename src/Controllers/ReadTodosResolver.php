@@ -13,6 +13,7 @@ class ReadTodosResolver implements ResolverInterface
         if (!$todo->canView($context['currentUser'])) {
             throw new Exception('Cannot view Todo');
         }
+        
         $list = Todo::get()->sort('Order', 'ASC');
         if (isset($args['ID'])) {
             $list = $list->filter('ID', $args['ID']);

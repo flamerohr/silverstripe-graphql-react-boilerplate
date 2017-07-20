@@ -5,6 +5,8 @@ const fields = [
   'IsDone',
   'Description',
   'Order',
+  'Created',
+  'LastEdited',
 ];
 
 const singularName = 'Todo';
@@ -20,7 +22,7 @@ const propTypes = {
 
 const defaultProps = {
   IsDone: false,
-  Decription: 'New todo',
+  Description: '',
 };
 
 export { fields, singularName, pluralName, propTypes, defaultProps };

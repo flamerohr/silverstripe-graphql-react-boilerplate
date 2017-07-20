@@ -1,6 +1,5 @@
 import { graphql } from 'react-apollo';
-import readQueryCreator from 'lib/graphql/readQueryCreator';
-import readResultsHandler from 'lib/graphql/readResultsHandler';
+import readQueryCreator, { readQueryHandler } from 'lib/graphql/readQueryCreator';
 import { fields, pluralName as name } from 'schemas/Todo';
 
 const params = {
@@ -8,10 +7,11 @@ const params = {
   Description: 'String',
   IsDone: 'Boolean',
 };
-const config = {
-  props: readResultsHandler(name),
-};
 
 const query = readQueryCreator(name, fields, { params });
+
+const config = {
+  props: readQueryHandler(name),
+};
 
 export default graphql(query, config);
