@@ -28,32 +28,83 @@ const createMutationCreator = (
   ${fragments}`
 );
 
+// this is the "standard way" to update the apollo store...
+const update = ({ singularName, pluralName, query, params }) => (client, { data: results }) => {
+  if (!singularName || !query) {
+    return;
+  }
+
+  const created = results[`create${singularName}`];
+  const variables = Object.keys(params).reduce((prev, key) => ({
+    ...prev,
+    [key]: null,
+  }), { limit: null, offset: null });
+
+  try {
+    const data = client.readQuery({ query, variables });
+    const queryName = `read${pluralName}`;
+
+    // add the new node in
+    data[queryName].edges = [
+      ...data[queryName].edges,
+      {
+        node: {
+          ...created,
+          __typename: singularName,
+        },
+        __typename: `${queryName}Edge`,
+      }
+    ];
+    client.writeQuery({ query, variables, data });
+  } catch (e) {
+    console.error(e);
+    // unable to read or write query, so leave it
+  }
+};
+
 /**
  * Provides an action that could be called by providing the input data, so the component
  * is agnostic to the structure of graphql.
  *
- * @param {function} afterMutation
  * @param {string[]} allowedFields
+ * @param {string} singularName
+ * @param {string} pluralName
+ * @param {object} query
+ * @param {object} params
+ * @param {function} afterMutation - callback for after a mutation is made, receives the following params:
+ *      * {object} data - data that was saved and received from the mutation
+ *      * {object} ownProps - the props of the components which called the mutation was wrapped
+ *      * {ApolloClient} client - the apollo client instance used for the mutation
  */
-const createMutateHandler = (afterMutation, allowedFields) => ({ mutate, ownProps }) => ({
-  mutate: submitData => (
-    mutate({
-      variables: {
-        Input: (allowedFields)
-          ? allowedFields.reduce((prev, field) => ({
-            ...prev,
-            [field]: submitData[field],
-          }), {})
-          : submitData,
-      },
-    }).then((data) => {
-      if (typeof afterMutation === 'function') {
-        afterMutation(data, ownProps);
-      }
-      return data;
-    })
-  ),
-});
+const createMutateHandler = ({
+  allowedFields,
+  singularName,
+  pluralName,
+  queryToUpdate: query,
+  params,
+  afterMutation,
+}) => (
+  ({ mutate, ownProps }) => ({
+    mutate: submitData => (
+      mutate({
+        variables: {
+          Input: (allowedFields)
+            ? allowedFields.reduce((prev, field) => ({
+              ...prev,
+              [field]: submitData[field],
+            }), {})
+            : submitData,
+        },
+        update: update({ singularName, pluralName, query, params }),
+      }).then((data) => {
+        if (typeof afterMutation === 'function') {
+          afterMutation(data, ownProps);
+        }
+        return data;
+      })
+    ),
+  })
+);
 
 export { createMutateHandler };
 

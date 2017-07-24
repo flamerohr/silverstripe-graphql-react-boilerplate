@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'react-apollo';
+import { Link } from 'react-router-dom';
 import stateful from 'lib/stateful';
 import createTodo from 'states/todos/createTodo';
 import { propTypes as todoShape, defaultProps as todoDefaults } from 'schemas/Todo';
@@ -14,6 +15,7 @@ const TodoCreate = ({ Description, mutate, setState }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+
     let error = '';
     if (Description.length > 0) {
       mutate({ Description });
@@ -27,7 +29,11 @@ const TodoCreate = ({ Description, mutate, setState }) => {
     <div>
       <form onSubmit={handleSubmit}>
         <input type="text" name="Description" value={Description} onChange={handleChange} />
-        <button type="submit">Create</button>
+
+        <ul>
+          <li><Link to="/" role="submit" onClick={handleSubmit}>Create</Link></li>
+          <li><Link to="/" role="button">Cancel</Link></li>
+        </ul>
       </form>
     </div>
   );

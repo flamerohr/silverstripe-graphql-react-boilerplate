@@ -1,8 +1,8 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import TodoList from 'components/todo/TodoList';
 import TodoCreate from 'components/todo/TodoCreate';
-import TodoUpdate from 'components/todo/TodoUpdate';
+// import TodoUpdate from 'components/todo/TodoUpdate';
 
 function App() {
   return (

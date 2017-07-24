@@ -1,7 +1,6 @@
 /* global window, document */
 import React from 'react';
 import { render } from 'react-dom';
-import thunk from 'redux-thunk';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 import apolloClientCreator from 'boot/apolloClientCreator';
@@ -22,8 +21,6 @@ const store = reduxStoreCreator({
 }, [
   // can remove this if you don't care for apollo-client's redux calls to appear in your store
   client.middleware(),
-  // NOTE: So that thunk actions will have access to the apolloClient to execute queries
-  thunk.withExtraArgument(client),
 ]);
 
 const boot = () => (

@@ -1,8 +1,9 @@
 import { graphql } from 'react-apollo';
 import createMutationCreator, { createMutateHandler } from 'lib/graphql/createMutationCreator';
-import { singularName as name } from 'schemas/Todo';
+import { query, params } from 'states/todos/readTodos';
+import { singularName, pluralName, fields } from 'schemas/Todo';
 
-const mutation = createMutationCreator(name);
+const mutation = createMutationCreator(singularName, fields);
 
 const allowedFields = [
   'Description',
@@ -18,7 +19,19 @@ const allowedFields = [
  */
 const createWrapper = (afterMutation) => {
   const config = {
-    props: createMutateHandler(allowedFields, afterMutation),
+    props: createMutateHandler({
+      // primary argument, still optional
+      allowedFields,
+
+      // arguments needed for manually updating the list without a refresh call
+      singularName,
+      pluralName,
+      queryToUpdate: query,
+      params,
+
+      // what to do after everything is done
+      afterMutation
+    }),
   };
 
   return graphql(mutation, config);

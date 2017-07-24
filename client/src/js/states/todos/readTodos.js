@@ -14,4 +14,6 @@ const config = {
   props: readQueryHandler(name),
 };
 
+export { query, params };
+
 export default graphql(query, config);
