@@ -8,30 +8,20 @@ import { mapFields, buildDefs, buildArgs } from 'lib/graphql/helpers';
  * @param {string[]} fields
  * @param {string} fragments
  * @param {object} params - format: { field: InputType }
+ * @param {boolean} paginate
  */
 const readQueryCreator = (
   pluralName,
   fields = [],
-  { fragments = '', params = {} } = {},
+  { fragments = '', params = {}, paginate = false } = {},
 ) => (
   gql`query Read${pluralName}(
-    $limit: Int,
-    $offset: Int
-    ${buildDefs(params)}
+    ${buildDefs(params, paginate)}
   ) {
     read${pluralName}(
-      limit: $limit,
-      offset: $offset
-      ${buildArgs(params)}
+      ${buildArgs(params, paginate)}
     ) {
-      edges {
-        node {
-          ${mapFields(fields)}
-        }
-      }
-      pageInfo {
-        totalCount
-      }
+      ${mapFields(fields, paginate)}
     }
   }
   ${fragments}`
@@ -41,15 +31,22 @@ const readQueryCreator = (
  * Juggle the graphql data obtained to a more meaningful structure, similar to mapStateToProps
  *
  * @param {string} name
+ * @param {boolean} paginate
  */
-const readQueryHandler = name => ({ data }) => {
-  const list = data[`read${name}`];
+const readQueryHandler = (name, { paginate = false } = {}) => ({ data }) => {
+  const results = data[`read${name}`];
+  const list = (paginate)
+    ? results && results.edges.map(edge => edge.node)
+    : results;
+  const totalCount = (paginate)
+    ? results && results.pageInfo.totalCount
+    : list && list.length;
   const { refetch: reload, error, loading } = data;
 
   return {
     reload,
-    [name]: list && list.edges.map(edge => edge.node),
-    totalCount: list && list.pageInfo.totalCount,
+    [name]: list,
+    totalCount,
     loading,
     error,
   };

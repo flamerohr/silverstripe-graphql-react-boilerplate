@@ -6,7 +6,7 @@ This relies on the GraphQL module built for SilverStripe, utilising the DataObje
  is provided.
 
 ## Getting started:
-Install the module with composer
+Install the module with composer, be prepared to just remove or disable all the todo examples provided
 ```bash
 composer require flamerohr/silverstripe-graphql-react-boilerplate
 ```

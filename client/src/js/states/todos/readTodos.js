@@ -8,10 +8,10 @@ const params = {
   IsDone: 'Boolean',
 };
 
-const query = readQueryCreator(name, fields, { params });
+const query = readQueryCreator(name, fields, { paginate: true });
 
 const config = {
-  props: readQueryHandler(name),
+  props: readQueryHandler(name, { paginate: true }),
 };
 
 export { query, params };

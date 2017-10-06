@@ -7,7 +7,6 @@ const mutation = createMutationCreator(singularName, fields);
 
 const allowedFields = [
   'Description',
-  'IsDone',
 ];
 
 /**
@@ -27,7 +26,10 @@ const createWrapper = (afterMutation) => {
       singularName,
       pluralName,
       queryToUpdate: query,
-      params,
+      getParams: (props) => (
+        Object.keys(params)
+          .reduce((prev, key) => ({ ...prev, [key]: null }))
+      ),
 
       // what to do after everything is done
       afterMutation

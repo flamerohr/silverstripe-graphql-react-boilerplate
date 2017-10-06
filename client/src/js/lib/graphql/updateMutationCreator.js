@@ -7,17 +7,20 @@ import { mapFields, buildDefs, buildArgs } from 'lib/graphql/helpers';
  * @param {string} singularName
  * @param {string[]} fields
  * @param {string} fragments
+ * @param {object} params - format: { field: InputType }
  */
-const createMutationCreator = (
+const updateMutationCreator = (
   singularName,
   fields = [],
-  { fragments = '' } = {},
+  { fragments = '', params = {} } = {},
 ) => (
-  gql`mutation Create${singularName}(
-    $Input:${singularName}CreateInputType!
+  gql`mutation Update${singularName}(
+    $Input:${singularName}UpdateInputType!
+    ${buildDefs(params)}
   ) {
-    create${singularName}(
+    update${singularName}(
       Input: $Input
+      ${buildArgs(params)}
     ) {
       ${mapFields(fields) || 'ID'}
     }
@@ -27,7 +30,7 @@ const createMutationCreator = (
 
 // this is the "standard way" to update the apollo store...
 const update = ({ singularName, pluralName, query, params = {} }) => (client, { data: results }) => {
-  if (!singularName || !query || !pluralName || !Object.keys(params).length) {
+  if (!singularName || !query) {
     return;
   }
 
@@ -56,7 +59,7 @@ const update = ({ singularName, pluralName, query, params = {} }) => (client, { 
     ];
     client.writeQuery({ query, variables, data });
   } catch (e) {
-    console.error(e);
+    console.warn(e);
     // unable to read or write query, so leave it
   }
 };
@@ -82,33 +85,27 @@ const createMutateHandler = ({
   pluralName,
   queryToUpdate: query,
   getParams,
-  afterMutation = () => null,
+  afterMutation,
 }) => (
   ({ mutate, ownProps }) => ({
-    mutate: submitData => {
-      const input = (allowedFields)
-        ? allowedFields.reduce((prev, field) => ({
-          ...prev,
-          [field]: submitData[field],
-        }), {})
-        : submitData;
-
-      return mutate({
+    mutate: submitData => (
+      mutate({
         variables: {
-          Input: input,
+          Input: (allowedFields)
+            ? allowedFields.reduce((prev, field) => ({
+              ...prev,
+              [field]: submitData[field],
+            }), {})
+            : submitData,
         },
-        update: update({
-          singularName,
-          pluralName,
-          query,
-          params: getParams(ownProps)
-        }),
-      })
-        .then((data) => {
+        update: update({ singularName, pluralName, query, params: getParams(ownProps) }),
+      }).then((data) => {
+        if (typeof afterMutation === 'function') {
           afterMutation(data, ownProps);
-          return data;
-        });
-    },
+        }
+        return data;
+      })
+    ),
   })
 );
 
