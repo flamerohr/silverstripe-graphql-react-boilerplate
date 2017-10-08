@@ -31,6 +31,11 @@ class TodoApp extends Controller implements PermissionProvider
         return Controller::join_links(Director::baseURL(), 'graphql');
     }
 
+    public function handleRequest(HTTPRequest $request, DataModel $model = null)
+    {
+        return $this->render()->forTemplate();
+    }
+    
     /**
      * @param DataObjectInterface$obj
      * @param $args
