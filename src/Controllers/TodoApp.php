@@ -20,13 +20,20 @@ class TodoApp extends Controller implements PermissionProvider
      * @var string
      */
     private static $app_root = '/todo/';
-    
+
+    public function getAppRootUri()
+    {
+        return $this->config()->app_root;
+    }
+
+    public function getApiUrl()
+    {
+        return Controller::join_links(Director::baseURL(), 'graphql');
+    }
+
     public function handleRequest(HTTPRequest $request, DataModel $model = null)
     {
-        return $this->renderWith(static::class, [
-            'AppRootUri' => $this->config()->app_root,
-            'ApiUrl' => Controller::join_links(Director::baseURL(), 'graphql'),
-        ])->forTemplate();
+        return $this->render()->forTemplate();
     }
     
     /**
@@ -46,10 +53,10 @@ class TodoApp extends Controller implements PermissionProvider
         if (isset($args['ID'])) {
             $list = $list->filter('ID', $args['ID']);
         }
-    
+
         return $list;
     }
-    
+
     public function providePermissions()
     {
         return [

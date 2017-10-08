@@ -4,8 +4,8 @@
   "description": "A prototype for use as a boilerplate to get started with webpack, react and graphql",
   "main": "client/src/js/boot/index.js",
   "scripts": {
-    "build": "yarn && NODE_ENV=production webpack -p --progress",
-    "watch": "yarn && NODE_ENV=development webpack --progress --watch",
+    "build": "yarn && cross-env NODE_ENV=production webpack -p --progress",
+    "watch": "yarn && cross-env NODE_ENV=development webpack --progress --watch",
     "test": "jest",
     "lint": "eslint webpack.config.js client/src/js"
   },
@@ -46,6 +46,7 @@
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.11.1",
     "babel-register": "^6.14.0",
+    "cross-env": "^5.0.5",
     "css-loader": "^0.28.2",
     "eslint": "^4.2.0",
     "eslint-config-airbnb": "^15.0.2",
